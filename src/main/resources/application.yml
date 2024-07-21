@@ -16,3 +16,5 @@ spring:
     open-in-view: true
     hibernate:
       ddl-auto: create
+
+REST_API_KEY : ""
