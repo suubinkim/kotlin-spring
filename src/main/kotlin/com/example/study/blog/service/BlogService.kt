@@ -1,8 +1,6 @@
 package com.example.study.blog.service
 
 import com.example.study.blog.dto.BlogDto
-import com.example.study.core.exception.InvalidInputException
-import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -16,21 +14,21 @@ class BlogService {
     lateinit var restApiKey: String
 
     fun searchKakao(blogDto: BlogDto): String? {
-        val msgList = listOf<ExceptionMsg>()
-
-        if (blogDto.query == "") {
-            msgList.add(ExceptionMsg.EMPTY_QUERY)
-        }
-
-        when {
-            blogDto.page < 1 -> msgList.add(ExceptionMsg.LESS_THAN_MIN)
-            blogDto.page > 50 -> msgList.add(ExceptionMsg.MORE_THAN_MAX)
-        }
-
-        if (!msgList.isEmpty()) {
-            val message = msgList[0].msg
-            throw InvalidInputException(message)
-        }
+//        val msgList = listOf<ExceptionMsg>()
+//
+//        if (blogDto.query == "") {
+//            msgList.add(ExceptionMsg.EMPTY_QUERY)
+//        }
+//
+//        when {
+//            blogDto.page < 1 -> msgList.add(ExceptionMsg.LESS_THAN_MIN)
+//            blogDto.page > 50 -> msgList.add(ExceptionMsg.MORE_THAN_MAX)
+//        }
+//
+//        if (!msgList.isEmpty()) {
+//            val message = msgList[0].msg
+//            throw InvalidInputException(message)
+//        }
         val webClient = WebClient
             .builder()
             .baseUrl("https://dapi.kakao.com")
