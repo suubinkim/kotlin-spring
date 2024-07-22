@@ -1,6 +1,8 @@
 package com.example.study.blog.service
 
 import com.example.study.blog.dto.BlogDto
+import com.example.study.core.exception.InvalidInputException
+import org.hibernate.internal.util.collections.CollectionHelper.listOf
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -11,9 +13,24 @@ import org.springframework.web.reactive.function.client.bodyToMono
 @Service
 class BlogService {
     @Value("\${REST_API_KEY}")
-    lateinit var restApiKey : String
+    lateinit var restApiKey: String
 
     fun searchKakao(blogDto: BlogDto): String? {
+        val msgList = listOf<ExceptionMsg>()
+
+        if (blogDto.query == "") {
+            msgList.add(ExceptionMsg.EMPTY_QUERY)
+        }
+
+        when {
+            blogDto.page < 1 -> msgList.add(ExceptionMsg.LESS_THAN_MIN)
+            blogDto.page > 50 -> msgList.add(ExceptionMsg.MORE_THAN_MAX)
+        }
+
+        if (!msgList.isEmpty()) {
+            val message = msgList[0].msg
+            throw InvalidInputException(message)
+        }
         val webClient = WebClient
             .builder()
             .baseUrl("https://dapi.kakao.com")
@@ -37,4 +54,11 @@ class BlogService {
 
         return result
     }
+}
+
+private enum class ExceptionMsg(val msg: String) {
+    EMPTY_QUERY("query parameter required"),
+    NOT_IN_SORT("sort parameter one of accuracy and recency"),
+    LESS_THAN_MIN("page is less than min"),
+    MORE_THAN_MAX("page is more than max")
 }
