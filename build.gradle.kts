@@ -45,3 +45,11 @@ kotlin {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+allOpen {
+	annotation("jakarta.persistence.Entity")
+}
+
+noArg {
+	annotation("jakarta.persistence.Entity")
+}
